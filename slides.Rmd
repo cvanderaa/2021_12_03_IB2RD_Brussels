@@ -1,0 +1,431 @@
+---
+title: "Computational challenges in mass spectrometry-based single-cell proteomics"
+subtitle: ""
+author: "Christophe Vanderaa"
+date: "2021/12/03"
+output:
+  xaringan::moon_reader:
+    css: [xaringan-themer.css, custom.css]
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: 16:9
+      countIncrementalSlides: true
+---
+
+```{r theme, echo=FALSE}
+xaringanthemer::style_mono_light(base_color = "#23395b")
+```
+
+```{r xaringanExtra, echo=FALSE}
+xaringanExtra::use_webcam()     ## use w to turn on webcam
+xaringanExtra::use_tile_view()  ## use o to get an overview
+xaringanExtra::use_fit_screen() ## use Alt-F to fit to screen
+xaringanExtra::use_extra_styles(
+  hover_code_line = TRUE
+  )
+xaringanExtra::use_panelset()
+```
+
+```{r libraries, include = FALSE}
+```
+
+class: middle
+name: cc-by
+
+### Get the slides at 
+
+These slides are available under a **creative common
+[CC-BY license](http://creativecommons.org/licenses/by/4.0/)**. You are
+free to share (copy and redistribute the material in any medium or
+format) and adapt (remix, transform, and build upon the material) for
+any purpose, even commercially
+<img height="20px" alt="CC-BY" src="https://raw.githubusercontent.com/UCLouvain-CBIO/scp-teaching/main/img/cc1.jpg" />.
+
+???
+
+
+---
+
+class: top
+
+# Single-cell technologies
+
+.panelset[
+
+.panel[.panel-name[Concept]
+
+#### Single-cell technologies unravel cellular heterogeneity
+
+.pull-left[
+
+Subpopulation identification
+
+```{r echo=FALSE, out.width='100%', fig.align = 'center'}
+knitr::include_graphics("./figs/bulk_issue1.svg")
+```
+
+]
+.pull-right[
+
+Differentiation trajectories
+
+```{r echo=FALSE, out.width='100%', fig.align = 'center'}
+knitr::include_graphics("./figs/bulk_issue2.svg")
+```
+
+]
+
+]
+
+.panel[.panel-name[Example]
+
+#### scRNA-Seq on murine embryonic liver
+
+.pull-left[
+
+Subpopulation identification
+
+```{r echo=FALSE, out.width='100%', fig.align = 'center'}
+knitr::include_graphics("./figs/sc_example1.svg")
+```
+
+]
+.pull-right[
+
+Differentiation trajectories
+
+```{r echo=FALSE, out.width='100%', fig.align = 'center'}
+knitr::include_graphics("./figs/sc_example2.svg")
+```
+
+]
+
+Wang et al. 2020. “Comparative Analysis of Cell Lineage Differentiation
+during Hepatogenesis in Humans and Mice at the Single-Cell 
+Transcriptome Level.” Cell Research 30 (12): 1109–26.
+
+]
+]
+
+---
+
+class: top
+
+# RNA vs protein
+
+.panelset[
+.panel[.panel-name[Concept]
+
+.left-column[
+
+```{r echo=FALSE, out.width='100%', fig.align = 'center'}
+knitr::include_graphics("./figs/rna_vs_protein_cartoon.svg")
+```
+]
+.right-column[
+
+scRNA-Seq is widely used, BUT
+
+*RNA &#8776; intention*: RNA is a precursor and "only" provides a proxy
+for cell function and identity
+
+*Protein &#8776; action*: protein content provides cellular function
+and identity
+
+]
+]
+.panel[.panel-name[Correlation]
+
+RNA and protein abundances may exhibit poor correlation
+
+```{r echo=FALSE, out.width='60%', fig.align = 'center'}
+knitr::include_graphics("./figs/rna_protein_correlation.svg")
+```
+
+Specht et al. 2021. “Single-Cell Proteomic and Transcriptomic Analysis
+of Macrophage Heterogeneity Using SCoPE2.” Genome Biology 22 (1): 50.
+
+]
+.panel[.panel-name[Measurement]
+
+.pull-left[
+
+```{r echo=FALSE, out.width='65%', fig.align = 'center'}
+knitr::include_graphics("./figs/rna_protein_measurement.svg")
+```
+
+]
+.pull-right[
+
+#### Proteins are more abundant than RNA
+
+Theoretically, counting RNA copies is more subject to stochasticity
+than counting protein copies. 
+
+**Challenge**: improve technology to increase sensitivity and accuracy
+
+#### Protein measurements are computed from multiple peptides 
+
+Estimate protein abundance **AND** variance
+
+**Challenge**: improve computational mapping of peptides to proteins
+
+]
+]
+]
+
+???
+
+### Concept
+
+...
+
+But can't we simply say that RNA is equal to protein? No we cannot!
+
+### Correlation
+
+...
+
+Ok it is not the same, but at least RNA at single-cell is much easier
+to measure. Yes, for the moment, but something important to 
+keep in mind is that scRNA-Seq is possible thanks to PCR amplification.
+
+---
+
+class: top
+
+# Single-cell proteomics experimental workflow
+
+```{r echo=FALSE, out.width='100%', fig.align = 'center'}
+knitr::include_graphics("figs/SCoPE2_method_workflow.svg")
+```
+
+---
+
+class: top
+
+# Single-cell proteomics data analysis
+
+```{r echo=FALSE, out.width='80%', fig.align = 'center'}
+knitr::include_graphics("figs/SCoPE2_computation_workflow.svg")
+```
+
+---
+
+class: top
+
+# Downstream analyses
+
+
+.panelset[
+.panel[.panel-name[Dimension reduction]
+
+```{r echo=FALSE, out.width='30%', fig.align = 'center'}
+knitr::include_graphics("figs/dimention_reduction.svg")
+```
+
+Specht et al. 2021. “Single-Cell Proteomic and Transcriptomic Analysis
+of Macrophage Heterogeneity Using SCoPE2.” Genome Biology 22 (1): 50.
+
+]
+.panel[.panel-name[Differential abundance]
+
+```{r echo=FALSE, out.width='40%', fig.align = 'center'}
+knitr::include_graphics("figs/differential_abundance.svg")
+```
+
+Liang et al. 2020. “Fully Automated Sample Processing and 
+Analysis Workflow for Low-Input Proteome Profiling.” Analytical 
+Chemistry, December. 
+
+]
+.panel[.panel-name[Trajectory analysis]
+
+```{r echo=FALSE, out.width='70%', fig.align = 'center'}
+knitr::include_graphics("figs/trajectory_analysis.svg")
+```
+
+Schoof et al. 2021. “Quantitative Single-Cell Proteomics as
+a Tool to Characterize Cellular Hierarchies.” Nature Communications 12
+(1): 745679.
+
+]
+]
+
+---
+class: top
+
+# Computational challenges
+
+.panelset[
+.panel[.panel-name[Batch effect]
+
+```{r echo=FALSE, out.width='65%', fig.align = 'center'}
+knitr::include_graphics("figs/batch_effect.svg")
+```
+
+
+]
+.panel[.panel-name[Missingness]
+.pull-left[
+
+#### Imputation leads to artefacts
+
+```{r echo=FALSE, out.width='100%', fig.align = 'center'}
+knitr::include_graphics("figs/imputation_issue.svg")
+```
+
+]
+.pull-right[
+
+#### Biological missingness
+
+```{r echo=FALSE, out.width='75%', fig.align = 'center'}
+knitr::include_graphics("figs/biological_missingness.svg")
+```
+
+]
+]
+.panel[.panel-name[Batch + Missingness]
+
+```{r echo=FALSE, out.width='100%', fig.align = 'center'}
+knitr::include_graphics("figs/batch_missingness.svg")
+```
+]
+]
+
+---
+
+class: top
+
+# In practice
+
+.panelset[
+.panel[.panel-name[Software]
+.left-column[
+
+```{r echo=FALSE, out.width='40%', fig.align = 'center'}
+knitr::include_graphics("figs/R.png")
+```
+
+
+```{r echo=FALSE, out.width='80%', fig.align = 'center'}
+knitr::include_graphics("figs/Bioconductor.png")
+```
+
+<br>
+<br>
+
+```{r echo=FALSE, out.width='40%', fig.align = 'center'}
+knitr::include_graphics("figs/Python.png")
+```
+
+]
+.right-column[
+
+- `QFeatures` and `scp`: manipulate and visualize single-cell 
+  proteomics data
+- `scpdata`: collection of published data ready to be analyzed
+- SCP.replication: website with replication of published analyses
+
+Vanderaa and Gatto. 2021. “Replication of Single-Cell Proteomics Data
+Reveals Important Computational Challenges.” Expert Review of 
+Proteomics, October, 1–9.
+
+<br>
+<br>
+
+- `SCeptre`: a python alternative to `QFeatures` and `scp`
+
+Schoof et al. 2021. “Quantitative Single-Cell Proteomics as a Tool to
+Characterize Cellular Hierarchies.” Nature Communications 12 (1):
+745679.
+
+]
+]
+.panel[.panel-name[scp]
+
+```{r, eval = FALSE}
+library(scp)
+scope2 <- readSCP(featureData = MQdata, colData = annotations, 
+                  channelCol = "Channel", batchCol = "Set")
+scope2 <- filterFeatures(scope2, ~ Potential.contaminant != "+")
+scope2 <- computeSCR(scope2, i = 1:4, colDataCol = "SampleType",
+             carrierPattern = "Carrier", samplePattern = "Monocyte")
+scope2 <- filterFeatures(scope2, ~ MeanSCR < 0.1)
+scope2 <- computeMedianCV(scope2, i = 1:3, proteinCol = "protein", peptideCol = "peptide")
+scope2 <- aggregateFeaturesOverAssays(scope2, i = 1:3, name = 4:6, 
+                                      fcol = "peptide", fun = robustSummary)
+scope2 <- joinAssays(scope2, i = 4:6, name = "peptides")
+scope2 <- normalize(scope2, i = "peptides", method = "median", na.rm = TRUE)
+scope2 <- logTransform(scope2, i = "normAssay", base = 2)
+scope2 <- impute(scope2, i = "normAssay", method = "knn") %>%
+scope2 <- aggregateFeatures(i = "logAssay", name = "proteins", fcol = "protein")
+```
+
+
+]
+.panel[.panel-name[scpdata]
+
+```{r, message=FALSE}
+library(scpdata)
+zhu2019EL()
+```
+
+
+]
+.panel[.panel-name[SCP.replication]
+
+```{r echo=FALSE, out.width='100%', fig.align = 'center'}
+knitr::include_graphics("figs/scp_replication.png")
+```
+
+]
+]
+
+---
+
+class: top
+
+# Take home messages
+
+#### Single-cell proteomics is coming!
+
+#### Exciting challenges: model/correct batch effects and missing data
+
+#### Many opportunities: method development, workflow development, benchmarking, ...
+
+
+Some usefull refs: 
+
+- Slavov, Nikolai. 2021. “Single-Cell Protein Analysis by Mass 
+  Spectrometry.” Current Opinion in Chemical Biology 60 (February): 1–9.
+- Kelly, Ryan T. 2020. “Single-Cell Proteomics: Progress and 
+  Prospects.” Molecular & Cellular Proteomics: MCP 19 (11): 1739–48.
+- Vanderaa et Gatto. 2021. “Replication of Single-Cell Proteomics Data
+  Reveals Important Computational Challenges.” Expert Review of 
+  Proteomics, October, 1–9.
+
+---
+
+class: top
+
+# Thank you for your attention
+
+#### Get in touch
+
+```{r echo=FALSE, out.width='100%', fig.align = 'center'}
+knitr::include_graphics("figs/get_in_touch.svg")
+```
+
+#### Funding
+
+```{r echo=FALSE, out.width='40%', fig.align = 'left'}
+knitr::include_graphics("figs/funding")
+```
+
+#### Link to the slides
+
+
+
