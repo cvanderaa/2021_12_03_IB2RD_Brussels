@@ -413,19 +413,17 @@ class: top
 
 # Thank you for your attention
 
-#### Get in touch
+
+### Link to the slides
+
+### Funding
+
+```{r echo=FALSE, out.width='40%', fig.align = 'left'}
+knitr::include_graphics("figs/funding.svg")
+```
+
+### Get in touch
 
 ```{r echo=FALSE, out.width='100%', fig.align = 'center'}
 knitr::include_graphics("figs/get_in_touch.svg")
 ```
-
-#### Funding
-
-```{r echo=FALSE, out.width='40%', fig.align = 'left'}
-knitr::include_graphics("figs/funding")
-```
-
-#### Link to the slides
-
-
-
