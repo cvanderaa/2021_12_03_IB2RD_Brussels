@@ -1,16 +1,14 @@
-slides:
-	make slides.html
+publish:
+	make slides
 	make web
 	## also copy figures
 	cp figs/* docs/figs/.
 	make clean
+	make github
 
-index.html:
-	Rscript -e 'rmarkdown::render("README.md", output_file = "./docs/index.html")'
-
-%.html: %.Rmd
+slides:
 	Rscript -e "rmarkdown::pandoc_available()"
-	Rscript -e "rmarkdown::render('$^', output_format = 'xaringan::moon_reader')"
+	Rscript -e "rmarkdown::render('slides.Rmd', output_file = './docs/index.html', output_format = 'xaringan::moon_reader')"
 
 web:
 	cp *.html docs/.
@@ -20,3 +18,8 @@ web:
 clean:
 	rm *.html xaringan-themer.css
 	rm -r *_files
+
+github:
+	git add docs/*
+	git commit -m "Pushed presentation to web"
+	git push
