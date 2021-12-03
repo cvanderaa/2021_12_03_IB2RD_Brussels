@@ -1,25 +1,14 @@
 publish:
 	make slides
-	make web
-	## also copy figures
-	cp figs/* docs/figs/.
-	make clean
-	make github
+	make push-github
 
 slides:
 	Rscript -e "rmarkdown::pandoc_available()"
 	Rscript -e "rmarkdown::render('slides.Rmd', output_file = './docs/index.html', output_format = 'xaringan::moon_reader')"
-
-web:
-	cp *.html docs/.
 	cp xaringan-themer.css docs/.
-	cp -r *_files docs/.
+	rm xaringan-themer.css
 
-clean:
-	rm *.html xaringan-themer.css
-	rm -r *_files
-
-github:
+push-github:
 	git add docs/*
 	git commit -m "Pushed presentation to web"
 	git push
