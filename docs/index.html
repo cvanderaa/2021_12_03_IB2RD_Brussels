@@ -71,9 +71,7 @@ Differentiation trajectories
 &lt;img src="./figs/bulk_issue2.svg" width="100%" style="display: block; margin: auto;" /&gt;
 
 ]
-
 ]
-
 .panel[.panel-name[Example]
 
 #### scRNA-Seq on murine embryonic liver
@@ -100,6 +98,32 @@ Transcriptome Level.” Cell Research 30 (12): 1109–26.
 ]
 ]
 
+???
+
+### Concept
+
+Single-cell proteomics is part of the single-cell technologies that are
+incredibly powerful when it comes to studying cellular heterogeneity.
+
+The great advantage of single-cell on bulk assays is that they are able
+to discover unknown sub-populations, even in well studied tissues. 
+Furthermore, single-cell assays capture continuous profiles typical of
+differentiation processes. 
+
+Let me show you an example.
+
+### Example
+
+In this study by Wang et al., the authors applied scRNA-Seq on 
+embryonic liver. They were able for instance to identify a new 
+sub-population of hepatoblasts expressing ID3 that was never described
+before. In the same study, they also could reconstruct the hematopoietic
+lineage from progenitors that differentiate into neutrophils, 
+lymphocytes, dendritic cells,...
+
+But this presentation is about single-cell proteomics, not scRNA-Seq.
+So you may ask yourself: why should we bother with proteins?
+
 ---
 
 class: top
@@ -115,13 +139,10 @@ class: top
 ]
 .right-column[
 
-scRNA-Seq is widely used, BUT
-
 *RNA &amp;#8776; intention*: RNA is a precursor and "only" provides a proxy
 for cell function and identity
 
-*Protein &amp;#8776; action*: protein content provides cellular function
-and identity
+*Protein &amp;#8776; function*: proteins bear the cellular function and identity
 
 ]
 ]
@@ -165,7 +186,12 @@ Estimate protein abundance **AND** variance
 
 ### Concept
 
-...
+Well, let us keep this in mind: RNA represent the intention of a cell.
+A cell may or may not commit to it. It is a precursor that is "only"
+used as a proxy to infer protein abundance. Protein allows for function.
+If the cell would want to rub its face, it would probably build a 
+protein for it! Hence the protein content will determine the cell's 
+identity. 
 
 But can't we simply say that RNA is equal to protein? No we cannot!
 
